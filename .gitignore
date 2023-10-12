@@ -1,0 +1,7 @@
+.venv
+venv
+.DS_Store
+.env
+model.safetensors
+__pycache__/
+sample.wav
