@@ -24,21 +24,9 @@ def init():
     model = load_checkpoint_and_dispatch(
         model, "model.safetensors", device_map="auto"
     )
-
-    # set up boto3 client with credentials from environment variables
-    s3 = boto3.client(
-        "s3",
-        aws_access_key_id=os.environ.get("AWS_ACCESS_KEY_ID"),
-        aws_secret_access_key=os.environ.get("AWS_SECRET_ACCESS_KEY"),
-    )
-
-    # get bucket from environment variable
-    bucket = os.environ.get("AWS_BUCKET")
    
     context = {
         "model": model,
-        "s3": s3,
-        "bucket": bucket,
         "processor": processor,
     }
 
@@ -50,14 +38,10 @@ def handler(context: dict, request: Request) -> Response:
     device = get_device()
 
     # get file path from request.json dict
-    path = request.json.get("path")
     processor = context.get("processor")
 
-    # download file from bucket
-    context.get("s3").download_file(context.get("bucket"), path, "sample.wav")
-
     # open the stored file and convert to tensors
-    input_features = processor(load_audio("sample.wav"), sampling_rate=16000, return_tensors="pt").input_features.to(device)
+    input_features = processor(load_audio("preamble.wav"), sampling_rate=16000, return_tensors="pt").input_features.to(device)
 
     # run inference on the sample
     model = context.get("model")
