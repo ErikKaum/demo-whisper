@@ -56,6 +56,20 @@ def handler(context: dict, request: Request) -> Response:
         status=200
     )
 
+# @app.handler runs for every call
+@app.handler("/device")
+def handler(context: dict, request: Request) -> Response:
+    device = get_device()
+
+    print(device)
+
+    # return output JSON to the client
+    return Response(
+        json = {"outputs": str(device)}, 
+        status=200
+    )
+
+
 # Note that since this function doesn't have a decorator, it's not a handler
 def load_audio(audio_path):
     """Loads audio file into tensor and resamples to 16kHz"""
