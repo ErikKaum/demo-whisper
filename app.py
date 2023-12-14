@@ -7,7 +7,6 @@ from transformers import AutoProcessor, WhisperForConditionalGeneration, Whisper
 from accelerate import init_empty_weights, load_checkpoint_and_dispatch
 import torchaudio
 
-
 # create a new Potassium app
 app = Potassium("my_app")
 
